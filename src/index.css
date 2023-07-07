@@ -8,6 +8,11 @@ body {
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* @apply flex flex-col items-center; */
+}
+
+#root {
+  @apply w-full max-w-screen-2xl mx-auto;
 }
 
 code {
