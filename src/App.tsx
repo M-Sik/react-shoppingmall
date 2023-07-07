@@ -1,7 +1,14 @@
-import React from "react";
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import Navbar from './components/nevbar/Navbar';
 
 function App() {
-  return <div>faefa</div>;
+  return (
+    <>
+      <Navbar />
+      <Outlet />
+    </>
+  );
 }
 
 export default App;
