@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiShoppingBag } from 'react-icons/fi';
 import { BsFillPencilFill } from 'react-icons/bs';
-import { login, logout } from '../../api/firebase';
+import { login, logout, onUserStateChange } from '../../api/firebase';
 import { User } from 'firebase/auth';
 
 export default function Navbar() {
@@ -13,6 +13,13 @@ export default function Navbar() {
   const handleLogout = () => {
     logout().then((user) => setUser(user));
   };
+  // 마운트 될때 유저에 대한 정보를 가져옴
+  useEffect(() => {
+    onUserStateChange((user: User) => {
+      console.log(user);
+      setUser(user);
+    });
+  }, []);
 
   return (
     <header className="flex justify-between border-b border-gray-300 p-2">

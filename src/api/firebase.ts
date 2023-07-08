@@ -1,6 +1,13 @@
 import { initializeApp } from 'firebase/app';
 
-import { getAuth, signOut, signInWithPopup, GithubAuthProvider } from 'firebase/auth';
+import {
+  getAuth,
+  signOut,
+  signInWithPopup,
+  GithubAuthProvider,
+  onAuthStateChanged,
+  User,
+} from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -29,4 +36,10 @@ export async function login() {
 
 export async function logout() {
   return signOut(auth).then(() => undefined);
+}
+// 유저에 대한 정보를 가져오는 함수
+export function onUserStateChange(callback: (user: User) => void) {
+  onAuthStateChanged(auth, (user) => {
+    if (user) callback(user);
+  });
 }
