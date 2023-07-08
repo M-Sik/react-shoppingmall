@@ -4,6 +4,7 @@ import { FiShoppingBag } from 'react-icons/fi';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { login, logout, onUserStateChange } from '../../api/firebase';
 import { User } from 'firebase/auth';
+import UserAvatar from '../avatar/UserAvatar';
 
 export default function Navbar() {
   const [user, setUser] = useState<User | void>();
@@ -16,7 +17,6 @@ export default function Navbar() {
   // 마운트 될때 유저에 대한 정보를 가져옴
   useEffect(() => {
     onUserStateChange((user: User) => {
-      console.log(user);
       setUser(user);
     });
   }, []);
@@ -33,6 +33,7 @@ export default function Navbar() {
         <Link to="/products/new" className="text-2xl">
           <BsFillPencilFill />
         </Link>
+        {!user || <UserAvatar user={user} />}
         {!user && <button onClick={handleLogin}>Login</button>}
         {!user || <button onClick={handleLogout}>Logout</button>}
       </nav>

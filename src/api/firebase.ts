@@ -26,7 +26,6 @@ export async function login() {
   return signInWithPopup(auth, provider)
     .then((result) => {
       const user = result.user;
-      console.log('???', result);
       return user;
     })
     .catch((error) => {
@@ -35,7 +34,11 @@ export async function login() {
 }
 
 export async function logout() {
-  return signOut(auth).then(() => undefined);
+  return signOut(auth)
+    .then(() => undefined)
+    .catch((error) => {
+      console.error(error);
+    });
 }
 // 유저에 대한 정보를 가져오는 함수
 export function onUserStateChange(callback: (user: User) => void) {
