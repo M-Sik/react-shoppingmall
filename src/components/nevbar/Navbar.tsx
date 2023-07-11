@@ -5,18 +5,14 @@ import { BsFillPencilFill } from 'react-icons/bs';
 import { login, logout, onUserStateChange } from '../../api/firebase';
 import { User } from 'firebase/auth';
 import UserAvatar from '../avatar/UserAvatar';
+import { ShopUser } from '../../types/User';
+import Button from '../button/Button';
 
 export default function Navbar() {
-  const [user, setUser] = useState<User | void>();
-  const handleLogin = () => {
-    login().then((user) => setUser(user));
-  };
-  const handleLogout = () => {
-    logout().then((user) => setUser(user));
-  };
+  const [user, setUser] = useState<ShopUser | void>();
   // 마운트 될때 유저에 대한 정보를 가져옴
   useEffect(() => {
-    onUserStateChange((user: User) => {
+    onUserStateChange((user: ShopUser) => {
       console.log(user);
       setUser(user);
     });
@@ -31,12 +27,15 @@ export default function Navbar() {
       <nav className="flex items-center gap-4 font-semibold">
         <Link to="/products">Products</Link>
         <Link to="/carts">Carts</Link>
-        <Link to="/products/new" className="text-2xl">
-          <BsFillPencilFill />
-        </Link>
+        {!user ||
+          (user.isAdmin && (
+            <Link to="/products/new" className="text-2xl">
+              <BsFillPencilFill />
+            </Link>
+          ))}
         {!user || <UserAvatar user={user} />}
-        {!user && <button onClick={handleLogin}>Login</button>}
-        {!user || <button onClick={handleLogout}>Logout</button>}
+        {!user && <Button text="Login" onClick={login} />}
+        {!user || <Button text="Logout" onClick={logout} />}
       </nav>
     </header>
   );

@@ -9,6 +9,7 @@ import {
   onAuthStateChanged,
   User,
 } from 'firebase/auth';
+import { ShopUser } from '../types/User';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -43,7 +44,7 @@ export async function logout() {
     });
 }
 // 유저에 대한 정보를 가져오는 함수
-export function onUserStateChange(callback: (user: User) => void) {
+export function onUserStateChange(callback: (user: ShopUser) => void) {
   onAuthStateChanged(auth, async (user) => {
     // 사용자가 있는경우(로그인한 경우)
     if (user) {
@@ -53,7 +54,7 @@ export function onUserStateChange(callback: (user: User) => void) {
   });
 }
 
-function adminUser(user: User) {
+function adminUser(user: ShopUser) {
   // 사용자가 어드민 권한을 가지고 있는지 확인
   // {...user, isAdmin: true/false}
   return get(ref(database, 'admins')) //
