@@ -44,20 +44,27 @@ export async function logout() {
 }
 // 유저에 대한 정보를 가져오는 함수
 export function onUserStateChange(callback: (user: User) => void) {
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     // 사용자가 있는경우(로그인한 경우)
-    user && adminUser(user);
-    if (user) callback(user);
+    if (user) {
+      const updatedUser = (await user) ? await adminUser(user) : null;
+      if (updatedUser) callback(updatedUser);
+    }
   });
 }
 
 function adminUser(user: User) {
   // 사용자가 어드민 권한을 가지고 있는지 확인
   // {...user, isAdmin: true/false}
-  return get(ref(database, 'admins')).then((snapshot) => {
-    if (snapshot.exists()) {
-      const admins = snapshot.val();
-      console.log(admins);
-    }
-  });
+  return get(ref(database, 'admins')) //
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        const admins = snapshot.val();
+        const isAdmin = admins.includes(user.uid);
+
+        return { ...user, isAdmin: isAdmin };
+      }
+      // 어드민이 아닌경우에는 그냥 유저정보만 반환
+      return user;
+    });
 }

@@ -17,6 +17,7 @@ export default function Navbar() {
   // 마운트 될때 유저에 대한 정보를 가져옴
   useEffect(() => {
     onUserStateChange((user: User) => {
+      console.log(user);
       setUser(user);
     });
   }, []);
