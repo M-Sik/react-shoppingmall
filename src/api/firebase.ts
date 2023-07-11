@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app';
+import { getDatabase, ref, child, get } from 'firebase/database';
 
 import {
   getAuth,
@@ -21,6 +22,7 @@ const app = initializeApp(firebaseConfig);
 
 const provider = new GithubAuthProvider();
 const auth = getAuth();
+const database = getDatabase(app);
 
 export async function login() {
   return signInWithPopup(auth, provider)
@@ -43,6 +45,19 @@ export async function logout() {
 // 유저에 대한 정보를 가져오는 함수
 export function onUserStateChange(callback: (user: User) => void) {
   onAuthStateChanged(auth, (user) => {
+    // 사용자가 있는경우(로그인한 경우)
+    user && adminUser(user);
     if (user) callback(user);
+  });
+}
+
+function adminUser(user: User) {
+  // 사용자가 어드민 권한을 가지고 있는지 확인
+  // {...user, isAdmin: true/false}
+  return get(ref(database, 'admins')).then((snapshot) => {
+    if (snapshot.exists()) {
+      const admins = snapshot.val();
+      console.log(admins);
+    }
   });
 }
