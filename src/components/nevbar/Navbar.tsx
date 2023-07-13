@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FiShoppingBag } from 'react-icons/fi';
 import { BsFillPencilFill } from 'react-icons/bs';
 import UserAvatar from '../avatar/UserAvatar';
@@ -8,6 +8,7 @@ import { useAuthContext } from '../../context/AuthContext';
 
 export default function Navbar() {
   const { user, login, logout } = useAuthContext();
+  const navigate = useNavigate();
 
   return (
     <header className="flex justify-between border-b border-gray-300 p-2">
@@ -17,7 +18,7 @@ export default function Navbar() {
       </Link>
       <nav className="flex items-center gap-4 font-semibold">
         <Link to="/products">Products</Link>
-        <Link to="/carts">Carts</Link>
+        {!user || <Link to="/carts">Carts</Link>}
         {!user ||
           (user.isAdmin && (
             <Link to="/products/new" className="text-2xl">
@@ -26,7 +27,15 @@ export default function Navbar() {
           ))}
         {!user || <UserAvatar user={user} />}
         {!user && <Button text="Login" onClick={login} />}
-        {!user || <Button text="Logout" onClick={logout} />}
+        {!user || (
+          <Button
+            text="Logout"
+            onClick={() => {
+              logout();
+              navigate(0);
+            }}
+          />
+        )}
       </nav>
     </header>
   );

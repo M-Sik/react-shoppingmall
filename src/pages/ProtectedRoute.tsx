@@ -18,5 +18,5 @@ export default function ProtectedRoute({ children, requireAdmin = false }: Props
   // requireAdmin이 true인 경우에는 로그인도 되어 있어야하고, 어드민 권한도 가지고 있어야함
   // 조건에 맞지 않으면 / 상위 경로로 이동!
   // 조건에 맞는 경우에만 전달된 children을 보여줌
-  return <div>{/*  */}</div>;
+  return <>{children}</>;
 }
