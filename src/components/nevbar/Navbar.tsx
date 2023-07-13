@@ -1,22 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { FiShoppingBag } from 'react-icons/fi';
 import { BsFillPencilFill } from 'react-icons/bs';
-import { login, logout, onUserStateChange } from '../../api/firebase';
-import { User } from 'firebase/auth';
 import UserAvatar from '../avatar/UserAvatar';
-import { ShopUser } from '../../types/User';
 import Button from '../button/Button';
+import { useAuthContext } from '../../context/AuthContext';
 
 export default function Navbar() {
-  const [user, setUser] = useState<ShopUser | void>();
-  // 마운트 될때 유저에 대한 정보를 가져옴
-  useEffect(() => {
-    onUserStateChange((user: ShopUser) => {
-      console.log(user);
-      setUser(user);
-    });
-  }, []);
+  const { user, login, logout } = useAuthContext();
 
   return (
     <header className="flex justify-between border-b border-gray-300 p-2">
