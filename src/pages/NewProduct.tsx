@@ -1,4 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { uploadImage } from '../api/uploader';
 
 type Product = {
   title: string;
@@ -21,7 +22,12 @@ export default function NewProduct() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     // 1. 제품의 사진을 cloudinary에 업로드 후 url 획득
-    // 2. firebase에 새로운 제품을 추가
+    if (file !== null && file !== undefined) {
+      uploadImage(file).then((url) => {
+        console.log(url);
+        // 2. firebase에 새로운 제품을 추가
+      });
+    }
   };
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = e.target;
@@ -54,7 +60,7 @@ export default function NewProduct() {
         />
         <input
           type="text"
-          name="price"
+          name="category"
           value={product.category ?? ''}
           placeholder="카테고리"
           required
