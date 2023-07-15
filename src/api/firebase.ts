@@ -10,6 +10,7 @@ import {
   User,
 } from 'firebase/auth';
 import { ShopUser } from '../types/User';
+import { Product } from '../types/Product';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -69,3 +70,5 @@ function adminUser(user: ShopUser) {
       return user;
     });
 }
+
+export async function addNewProduct(product: Product, imageUrl: string) {}

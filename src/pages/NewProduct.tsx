@@ -1,13 +1,7 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { uploadImage } from '../api/uploader';
-
-type Product = {
-  title: string;
-  price: string;
-  category: string;
-  description: string;
-  options: string;
-};
+import { Product } from '../types/Product';
+import { addNewProduct } from '../api/firebase';
 
 export default function NewProduct() {
   const [product, setProduct] = useState<Product>({
@@ -26,6 +20,7 @@ export default function NewProduct() {
       uploadImage(file).then((url) => {
         console.log(url);
         // 2. firebase에 새로운 제품을 추가
+        addNewProduct(product, url);
       });
     }
   };
