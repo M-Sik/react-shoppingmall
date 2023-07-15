@@ -12,16 +12,26 @@ export default function NewProduct() {
     options: '',
   });
   const [file, setFile] = useState<File | null>();
+  const [isUploading, setIsUploading] = useState(false);
+  const [success, setSuccess] = useState<string | undefined>();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    setIsUploading(true);
     // 1. 제품의 사진을 cloudinary에 업로드 후 url 획득
     if (file !== null && file !== undefined) {
-      uploadImage(file).then((url) => {
-        console.log(url);
-        // 2. firebase에 새로운 제품을 추가
-        addNewProduct(product, url);
-      });
+      uploadImage(file)
+        .then((url) => {
+          console.log(url);
+          // 2. firebase에 새로운 제품을 추가
+          addNewProduct(product, url).then(() => {
+            setSuccess('성공적으로 제품이 추가 되었습니다.');
+            setTimeout(() => {
+              setSuccess(undefined);
+            }, 4000);
+          });
+        })
+        .finally(() => setIsUploading(false));
     }
   };
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -33,9 +43,13 @@ export default function NewProduct() {
   };
 
   return (
-    <section>
-      {file && <img src={URL.createObjectURL(file)} alt="local file" />}
-      <form onSubmit={handleSubmit}>
+    <section className="w-full text-center py-10">
+      <h2 className="text-2xl font-bold my-4">새로운 제품 등록</h2>
+      {success && <p className="my-2">{success}</p>}
+      {file && (
+        <img className="w-96 mx-auto mb-2" src={URL.createObjectURL(file)} alt="local file" />
+      )}
+      <form onSubmit={handleSubmit} className="flex flex-col px-12">
         <input type="file" accept="image/*" name="file" required onChange={handleChange} />
         <input
           type="text"
@@ -77,8 +91,8 @@ export default function NewProduct() {
           required
           onChange={handleChange}
         />
-        <button type="submit" className="bg-brand text-white py-2 px-4">
-          제품 등록하기
+        <button type="submit" className="bg-brand text-white py-2 px-4" disabled={isUploading}>
+          {isUploading ? '업로드중...' : '제품 등록하기'}
         </button>
       </form>
     </section>

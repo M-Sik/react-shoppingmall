@@ -8,7 +8,6 @@ import {
   signInWithPopup,
   GithubAuthProvider,
   onAuthStateChanged,
-  User,
 } from 'firebase/auth';
 import { ShopUser } from '../types/User';
 import { Product } from '../types/Product';
@@ -75,7 +74,7 @@ function adminUser(user: ShopUser) {
 export async function addNewProduct(product: Product, imageUrl: string) {
   const id = uuid();
 
-  set(ref(database, `products/${id}`), {
+  return set(ref(database, `products/${id}`), {
     ...product,
     id: id,
     price: parseInt(product.price),
