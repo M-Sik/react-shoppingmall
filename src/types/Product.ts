@@ -3,5 +3,5 @@ export type Product = {
   price: string;
   category: string;
   description: string;
-  options: string;
+  options: string | string[];
 };
