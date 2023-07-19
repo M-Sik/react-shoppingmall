@@ -10,7 +10,7 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth';
 import { ShopUser } from '../types/User';
-import { Product } from '../types/Product';
+import { CartProduct, Product } from '../types/Product';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -100,10 +100,7 @@ export async function getCart(userId: string) {
     });
 }
 
-export async function addOrUpdateToCart(
-  userId: string,
-  product: Product & { image: string; id: string },
-) {
+export async function addOrUpdateToCart(userId: string, product: CartProduct) {
   return set(ref(database, `carts/${userId}/${product.id}`), product);
 }
 

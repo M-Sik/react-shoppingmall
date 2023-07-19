@@ -1,6 +1,8 @@
 import React, { ChangeEvent, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Product } from '../types/Product';
+import { useAuthContext } from '../context/AuthContext';
+import { addOrUpdateToCart } from '../api/firebase';
 
 type RouteState = {
   state: {
@@ -9,6 +11,7 @@ type RouteState = {
 };
 
 export default function ProductDetail() {
+  const { uid } = useAuthContext();
   const {
     state: {
       product: { id, image, title, description, category, price, options },
@@ -20,7 +23,8 @@ export default function ProductDetail() {
     setSelected(e.target.value);
   };
   const handleClick = () => {
-    // 장바구니에 추가하면됨
+    const product = { id, image, title, price, option: selected, quantity: 1 };
+    addOrUpdateToCart(uid ? uid : '', product);
   };
 
   return (
@@ -49,7 +53,7 @@ export default function ProductDetail() {
           </div>
           <button
             className="bg-brand text-white rounded-lg py-3 px-4 font-bold"
-            onClick={() => handleClick}
+            onClick={handleClick}
           >
             장바구니 담기
           </button>

@@ -5,11 +5,12 @@ import { User } from 'firebase/auth';
 
 type AuthContextType = {
   user?: ShopUser;
+  uid?: string;
   login: () => Promise<void | User>;
   logout: () => Promise<void | undefined>;
 };
 
-const AuthContext = createContext<AuthContextType>({ user: {} as any, login, logout });
+const AuthContext = createContext<AuthContextType>({ user: {} as any, uid: '', login, logout });
 
 export function AuthContextProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<ShopUser>();
@@ -22,7 +23,11 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   }, []);
 
   if (user) {
-    return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+    return (
+      <AuthContext.Provider value={{ user, uid: user && user.uid, login, logout }}>
+        {children}
+      </AuthContext.Provider>
+    );
   } else return <AuthContext.Provider value={{ login, logout }}>{children}</AuthContext.Provider>;
 }
 export const aaa = 'ff';
