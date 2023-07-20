@@ -9,9 +9,11 @@ type Props = {
   uid: string;
 };
 
+const ICON_CLASS = 'transition-all cursor-pointer hover:text-brand hover:scale-105 mx-1';
+
 export default function CartItem({
   product,
-  product: { id, image, title, option, quantity },
+  product: { id, image, title, option, quantity, price },
   uid,
 }: Props) {
   const handleMinus = () => {
@@ -26,16 +28,19 @@ export default function CartItem({
   };
 
   return (
-    <li>
-      <img src={image} alt={title} />
-      <div>
-        <p>{title}</p>
-        <p>{option}</p>
-        <div>
-          <AiOutlineMinusSquare onClick={handleMinus} />
+    <li className="flex my-2 items-center p-4">
+      <img src={image} alt={title} className="w-24 md:w-48 rounded-lg" />
+      <div className="flex justify-between flex-1 ml-4">
+        <div className="basis-3/5">
+          <p className="text-lg">{title}</p>
+          <p className="text-xl font-bold text-brand">{option}</p>
+          <p>{price}원</p>
+        </div>
+        <div className="text-2xl flex items-center">
+          <AiOutlineMinusSquare className={ICON_CLASS} onClick={handleMinus} />
           <span>{quantity}</span>
-          <AiOutlinePlusSquare onClick={handlePlus} />
-          <RiDeleteBin5Fill onClick={handleDelete} />
+          <AiOutlinePlusSquare onClick={handlePlus} className={ICON_CLASS} />
+          <RiDeleteBin5Fill onClick={handleDelete} className={ICON_CLASS} />
         </div>
       </div>
     </li>
