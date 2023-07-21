@@ -3,6 +3,7 @@ import { uploadImage } from '../api/uploader';
 import { Product } from '../types/Product';
 import { addNewProduct } from '../api/firebase';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import useProducts from '../hooks/useProducts';
 
 export default function NewProduct() {
   const [product, setProduct] = useState<Product>({
@@ -15,15 +16,8 @@ export default function NewProduct() {
   const [file, setFile] = useState<File | null>();
   const [isUploading, setIsUploading] = useState(false);
   const [success, setSuccess] = useState<string | undefined>();
-  const queryClient = useQueryClient();
-  const addProduct = useMutation(
-    // 어떤것을 인자로 받아서 어떤 함수를 호출할지 정의
-    ({ product, url }: { product: Product; url: any }) => addNewProduct(product, url),
-    // 뮤테이션이 성공적으로 되면 캐싱을함
-    {
-      onSuccess: () => queryClient.invalidateQueries(['products']),
-    },
-  );
+
+  const { addProduct } = useProducts();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
