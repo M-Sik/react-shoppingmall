@@ -2,6 +2,7 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { uploadImage } from '../api/uploader';
 import { Product } from '../types/Product';
 import { addNewProduct } from '../api/firebase';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function NewProduct() {
   const [product, setProduct] = useState<Product>({
@@ -14,6 +15,15 @@ export default function NewProduct() {
   const [file, setFile] = useState<File | null>();
   const [isUploading, setIsUploading] = useState(false);
   const [success, setSuccess] = useState<string | undefined>();
+  const queryClient = useQueryClient();
+  const addProduct = useMutation(
+    // 어떤것을 인자로 받아서 어떤 함수를 호출할지 정의
+    ({ product, url }: { product: Product; url: any }) => addNewProduct(product, url),
+    // 뮤테이션이 성공적으로 되면 캐싱을함
+    {
+      onSuccess: () => queryClient.invalidateQueries(['products']),
+    },
+  );
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -22,14 +32,17 @@ export default function NewProduct() {
     if (file !== null && file !== undefined) {
       uploadImage(file)
         .then((url) => {
-          console.log(url);
-          // 2. firebase에 새로운 제품을 추가
-          addNewProduct(product, url).then(() => {
-            setSuccess('성공적으로 제품이 추가 되었습니다.');
-            setTimeout(() => {
-              setSuccess(undefined);
-            }, 4000);
-          });
+          addProduct.mutate(
+            { product, url },
+            {
+              onSuccess: () => {
+                setSuccess('성공적으로 제품이 추가 되었습니다.');
+                setTimeout(() => {
+                  setSuccess(undefined);
+                }, 4000);
+              },
+            },
+          );
         })
         .finally(() => setIsUploading(false));
     }

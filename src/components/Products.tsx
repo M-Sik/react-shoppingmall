@@ -4,7 +4,11 @@ import { getProducts } from '../api/firebase';
 import ProductCard from './cards/ProductCard';
 
 export default function Products() {
-  const { isLoading, error, data: products } = useQuery<any>(['products'], () => getProducts());
+  const {
+    isLoading,
+    error,
+    data: products,
+  } = useQuery<any>(['products'], () => getProducts(), { staleTime: 1000 * 60 });
   console.log('??', products);
 
   return (
